@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  app:
+    hostname: app
+    build: './src/app'
+    volumes:
+      - './src/app:/app'
+    ports:
+      - '3000:3000'
+
+  www:
+    hostname: www
+    build: './src/www'
+    volumes:
+      - './src/www:/usr/share/nginx/html'
+    ports:
+      - '8080:80'
+
+  docker-push:
+    image: 'tmvdl/projects:applicationserver'
+    build: './src/app'
+
+  github-release:
+    image: 'github-release'
+    build: './src'
