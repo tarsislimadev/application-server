@@ -27,7 +27,7 @@ const server = netPkg.createServer((socket) => {
     lastData = Date.now()
   })
 
-  setInterval(() => Date.now() - lastData > 1000 ? socket.end() : null, 1000)
+  setInterval(() => Date.now() - lastData > 500 ? socket.end() : null, 500)
 })
 
 server.listen(PORT, () => console.log(`listening on port ${PORT}`))
