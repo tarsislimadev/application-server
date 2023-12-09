@@ -8,7 +8,7 @@ services:
     volumes:
       - './src/app:/app'
     ports:
-      - '3000:3000'
+      - '8080:80'
 
   www:
     hostname: www
