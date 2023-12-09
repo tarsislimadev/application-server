@@ -1,0 +1,9 @@
+{
+  "name": "application-server",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node . "
+  },
+  "main": "index.js",
+  "license": "MIT"
+}
