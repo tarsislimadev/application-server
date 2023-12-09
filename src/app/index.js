@@ -1,4 +1,6 @@
 const netPkg = require('net')
+const path = require('path')
+const fs = require('fs')
 
 const { Request } = require('./libs/parsers/request.js')
 
@@ -11,16 +13,26 @@ const app = require('./app.js')
 const server = netPkg.createServer((socket) => {
   let lastData = Date.now()
 
-  socket.on('data', (data) => {
-    console.log('socket.on:data', { data: data.toString() })
+  let cseq = 0
 
-    const req = new Request(data.toString())
+  const sessionId = Date.now()
+
+  socket.on('data', (data) => {
+    const dateStr = data.toString()
+
+    fs.writeFileSync(path.resolve('.', 'files', `${Date.now()}.http`), dateStr)
+
+    const req = new Request(dateStr)
 
     const res = new Response(req)
 
+    res.setHeader('Session', sessionId)
+
+    res.setHeader('CSeq', ++cseq)
+
     const runned = app.run(req, res)
 
-    console.log('socket.on:data', { req, res, runned })
+    console.log({ req, res, runned, data: dateStr })
 
     socket.write(runned.toString())
 

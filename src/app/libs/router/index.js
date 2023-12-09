@@ -1,3 +1,4 @@
+const { NotFoundError } = require('../errors/index.js')
 
 class Router {
   requests = []
@@ -13,7 +14,7 @@ class Router {
     )
 
     if (!action) {
-      return response
+      return response.setError(new NotFoundError())
     }
 
     return action.fn(request, response)

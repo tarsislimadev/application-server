@@ -31,22 +31,29 @@ class Request {
   }
 
   parseProtocol(data) {
-    const [, , protocol] = this.getFirstLine(data).split(' ')
+    const [, , protocol,] = this.getFirstLine(data).split(' ')
     return protocol
   }
 
   parseMethod(data) {
-    const [method] = this.getFirstLine(data).split(' ')
+    const [method,] = this.getFirstLine(data).split(' ')
     return method
   }
 
   parsePath(data) {
-    const [, path] = this.getFirstLine(data).split(' ')
+    const [, path = '',] = this.getFirstLine(data).split(' ')
+    console.log({ path })
+
+    if (path.toString().indexOf('://') !== -1) {
+      const url = new URL(path)
+      return url.pathname
+    }
+
     return path
   }
 
   parseBody(data) {
-    const [, body = ''] = this.getHeadersAndBody(data)
+    const [, body = '',] = this.getHeadersAndBody(data)
     return body
   }
 }
