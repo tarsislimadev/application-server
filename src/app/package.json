@@ -8,7 +8,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@brtmvdl/backend": "^1.0.11",
-    "@brtmvdl/logger": "^0.2.4"
+    "@brtmvdl/backend": "^1.0.12",
+    "@brtmvdl/logger": "^0.2.5"
   }
 }
