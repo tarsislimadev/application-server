@@ -1,9 +1,14 @@
 {
   "name": "application-server",
   "version": "0.1.0",
+  "type": "module",
   "scripts": {
     "start": "node . "
   },
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@brtmvdl/backend": "^1.0.11",
+    "@brtmvdl/logger": "^0.2.4"
+  }
 }

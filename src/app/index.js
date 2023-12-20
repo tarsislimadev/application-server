@@ -1,18 +1,18 @@
-const netPkg = require('net')
-const path = require('path')
-const fs = require('fs')
+import netPkg from 'net'
 
-const { Request } = require('./libs/parsers/request.js')
+import { HttpRequest, HttpResponse } from '@brtmvdl/backend'
 
-const { Response } = require('./libs/parsers/response.js')
+import { Logger } from '@brtmvdl/logger'
 
-const { PORT } = require('./config.js')
+import { PORT } from './config.js'
 
-const app = require('./app.js')
+import app from './app.js'
+
+const logger = new Logger('server')
+
+logger.setPath('files')
 
 const server = netPkg.createServer((socket) => {
-  let lastData = Date.now()
-
   let cseq = 0
 
   const sessionId = Date.now()
@@ -20,26 +20,22 @@ const server = netPkg.createServer((socket) => {
   socket.on('data', (data) => {
     const dateStr = data.toString()
 
-    fs.writeFileSync(path.resolve('.', 'files', `${Date.now()}.http`), dateStr)
+    logger.file(`${Date.now()}.http`, dateStr)
 
-    const req = new Request(dateStr)
+    const req = new HttpRequest(dateStr)
 
-    const res = new Response(req)
+    const res = new HttpResponse(req)
 
     res.setHeader('Session', sessionId)
 
-    res.setHeader('CSeq', ++cseq)
+    res.setHeader('CSeq', cseq++)
 
-    const runned = app.run(req, res)
+    res.on('data', (r) => socket.write(r.toString()))
 
-    console.log({ req, res, runned, data: dateStr })
+    res.on('end', () => socket.end())
 
-    socket.write(runned.toString())
-
-    lastData = Date.now()
+    app.run(req, res).catch((err) => res.setError(err)).finally(() => res.end())
   })
-
-  setInterval(() => Date.now() - lastData > 500 ? socket.end() : null, 500)
 })
 
 server.listen(PORT, () => console.log(`listening on port ${PORT}`))

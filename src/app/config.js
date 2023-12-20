@@ -1,7 +1,5 @@
-// 
+import path from 'path'
 
-const { PORT = '80' } = process.env
+export const PORT = process.env.PORT
 
-module.exports = {
-  PORT,
-}
+export const PATH = path.resolve('.', 'files')

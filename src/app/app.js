@@ -1,10 +1,16 @@
-const { Router } = require('./libs/router/index.js')
+import path from 'path'
+
+import { Router } from '@brtmvdl/backend'
+
+import { PATH } from './config.js'
 
 const app = new Router()
 
 // HTTP
 
-app.request('GET', '*', (_, res) => res)
+app.request('GET', '/', (_, res) => res.setFile(path.resolve(PATH, 'audio.mp3')))
+
+app.request('GET', '/audio.mp3', (_, res) => res.setFile(path.resolve(PATH, 'audio.mp3')))
 
 // RTSP
 
@@ -12,7 +18,7 @@ app.request('OPTIONS', '*', (_, res) => res.setHeader('Public', 'DESCRIBE, SETUP
 
 app.request('DESCRIBE', '*', (_, res) => res)
 
-app.request('SETUP', '*', (_, res) => res)
+app.request('SETUP', '*', (req, res) => res.setHeader('Transport', req.getHeader('Transport')))
 
 // app.request('PLAY', '*', (_, res) => res)
 
@@ -34,4 +40,4 @@ app.request('SET_PARAMETER', '*', (_, res) => res)
 
 app.request('REDIRECT', '*', (_, res) => res)
 
-module.exports = app
+export default app
