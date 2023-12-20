@@ -32,7 +32,7 @@ const server = netPkg.createServer((socket) => {
 
     res.on('data', (r) => socket.write(r.toString()))
 
-    res.on('end', () => socket.end())
+    res.on('end', (r) => socket.end(r?.toString()))
 
     app.run(req, res).catch((err) => res.setError(err)).finally(() => res.end())
   })
